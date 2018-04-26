@@ -12,18 +12,24 @@ bananicity = 0.1
 target = Banana(bananicity)
 
 ndim = 2
-nsamples = 20
-start = np.array([0., 10.])
+nsamples = 100
+#start = np.array([0., 10.])
+start = np.array([-20., -30.])
 
 mu = np.array([0., 0.])
-cov = np.array([[.00001, 0.], [0., .00001]])
+cov = np.array([[10., 0.], [0., 10.]])
 proposal = Gaussian(mu=mu, cov=cov)
 sampler = StaticMetropolis(ndim, target.pdf, proposal)
 
 samples, mean, variance = sampler.sample(nsamples, start)
 
-print(samples)
-plt.plot(samples[:, 0], samples[:, 1])
+n_accepted = 1
+for i in range(1, nsamples):
+    if (samples[i] != samples[i-1]).any():
+            n_accepted += 1
+
+print('Acceptance rate:', n_accepted/nsamples)
+plt.scatter(samples[:, 0], samples[:, 1], 1, 'red')
 
 
 a = np.sqrt(599)
