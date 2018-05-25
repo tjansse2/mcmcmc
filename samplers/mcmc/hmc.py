@@ -23,8 +23,11 @@ def leapfrog(q, dlogq, p, dlogp, stepsize, nsteps):
             dlogq_eval = dlogq(q)
         except RuntimeWarning:
             return np.nan, np.nan
+
+        #print('gradient:', dlogq_eval)
             
-        if dlogq_eval is not np.inf:
+        #if dlogq_eval is not (np.inf or -np.inf):
+        if not (abs(dlogq_eval) == np.inf).any():
             #  first half momentum update
             p = p - (stepsize / 2) * -dlogq_eval
             

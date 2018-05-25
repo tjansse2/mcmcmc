@@ -1,5 +1,6 @@
 from samplers.mcmc.mcmc_base import MCMC
 import numpy as np
+from copy import copy
 from statistics.variance import online_variance
 
 class StaticMetropolis(MCMC):
@@ -19,7 +20,7 @@ class StaticMetropolis(MCMC):
     def sample(self, nsamples, start):
         samples = np.zeros([nsamples, self.ndim])
         sample_variance = online_variance()
-        current = start
+        current = copy(start)
         current_pdf = self.target_pdf(start)
         for t in range(1, nsamples+1):
             proposal, proposal_pdf = self.proposal(current, current_pdf)
