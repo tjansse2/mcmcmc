@@ -63,7 +63,6 @@ class BarIndexTracker(object):
             self.rects = ax.barh(self.y, x[self.ind, :], **kwargs)
         elif self.orientation == 'vertical':
             _,self.slices = y.shape
-            print(self.slices)
             self.ind = self.slices//2
             self.rects = ax.bar(x, self.y[:, self.ind], **kwargs)
         
@@ -101,7 +100,7 @@ class TrackerHandler(object):
 def plot_2d(hist, data_target, title="",labelx="x",labely="y",labelz="Z",xticks=None,yticks=None):
    
     shape=np.shape(hist)
-    if isinstance(data_target,float):
+    if data_target is not None and isinstance(data_target,float):
         data_target = np.full(shape,data_target)
 
     nbinsX = shape[0]
@@ -151,16 +150,21 @@ def plot_2d(hist, data_target, title="",labelx="x",labely="y",labelz="Z",xticks=
     ax_samples_x0.set_title(title)
     ax_samples_x0.set_ylim([0, hist.max()])
     tracker_samples_x0_bar = BarIndexTracker(ax_samples_x0, x, hist, width=1/nbinsX)
-    tracker_samples_x0_plot = PlotIndexTracker(ax_samples_x0, ax_samples_2d, x, data_target, color='orange')
+    if data_target is not None:
+        tracker_samples_x0_plot = PlotIndexTracker(ax_samples_x0, ax_samples_2d, x, data_target, color='orange')
     trackerhandler.add(tracker_samples_x0_bar)
-    trackerhandler.add(tracker_samples_x0_plot)
+    if data_target is not None:
+        trackerhandler.add(tracker_samples_x0_plot)
     
     ax_samples_x1.set_xlim([0, hist.max()])
     tracker_samples_x1_bar = BarIndexTracker(ax_samples_x1, hist, y, orientation='horizontal', height=1/nbinsY)
-    tracker_samples_x1_plot = PlotIndexTracker(ax_samples_x1, ax_samples_2d, data_target, y, orientation='horizontal', color='orange')
+    if data_target is not None:
+        tracker_samples_x1_plot = PlotIndexTracker(ax_samples_x1, ax_samples_2d, data_target, y, orientation='horizontal', color='orange') 
     trackerhandler.add(tracker_samples_x1_bar)
-    trackerhandler.add(tracker_samples_x1_plot)
+    if data_target is not None:
+        trackerhandler.add(tracker_samples_x1_plot)
     
     fig.canvas.mpl_connect('scroll_event', trackerhandler.onscroll)
     
+    #plt.savefig("plots/"+data_filename+title+"_"+labelx+"_"+labely)
     plt.show()

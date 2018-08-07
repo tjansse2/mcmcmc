@@ -1,0 +1,48 @@
+*******************
+README - interfaces
+*******************
+
+purpose
+#######
+
+The interface is used as the link between the store format
+of the data  and the test environment.
+
+features
+########
+
+An interface has to provide a class with three funktions:
+
+
+getSamples(path)
+****************
+
+This funktion takes the path to the directory where the
+data is stored as argument and returns a numpy structued
+array with has to have at lest two fields:
+
+  1. sample : witch contains the path to a single data file.
+  2. size   : witch contains the number of entrys of the 
+              corresponding data file.
+
+There can be additional fileds e.g. for the generator
+configuration.
+
+getReference(path)
+******************
+
+Similar to the "getSamples" funktion but takes the path to
+only one data file.
+It should return a dictonary with provides the same 
+information as the filds of the structued array
+in "getSamples".
+In contrast to getSamples the entry "sample" should not 
+contain the path but the loaded data in form of an array
+
+load(path)
+**********
+This funktion is used to load the data from the paths
+in the field "sample"
+It should return an array with the data.
+e.g. if the data is stored in numpy binary files (npy)
+the funktion could just return np.load(path)
